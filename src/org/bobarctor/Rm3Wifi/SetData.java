@@ -1,12 +1,15 @@
 package org.bobarctor.Rm3Wifi;
 
+
+
 import org.bobarctor.Rm3Wifi.Exceptions.SaveDataException;
-import org.bobarctor.Rm3Wifi.Facade.FacadeController;
+//import org.bobarctor.Rm3Wifi.Facade.FacadeController;
 import org.bobarctor.Rm3Wifi.Model.Data;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,18 +27,20 @@ public class SetData extends Activity{
 	 */
 	private static final String TAG = "Rm3WiFi:SetData";
 	private static final int MILLISECONDS = 100;
+	private static final String savePath="data";
 	private EditText username;
 	private EditText password;
-	private FacadeController fc;
+	//private FacadeController fc;
 	private Vibrator vibrator;
 	private ProgressDialog myPd;
+	private SharedPreferences sharedPref;
+	private SharedPreferences.Editor editor;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		Log.i(TAG,"onCreate()");
 		setContentView(R.layout.set_data);
-		fc = FacadeController.getInstance();
         vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE); 
 		username = (EditText) findViewById(R.id.username);
 		password = (EditText) findViewById(R.id.password);
@@ -50,6 +55,31 @@ public class SetData extends Activity{
 		});
 	}
 
+//	public void saveButtonClick() {
+//		Log.d(TAG, "saveButtonClick() " + username.getText() + " " + password.getText()  );
+//		myPd.setMessage(getResources().getString(R.string.saving_data));
+//    	myPd.show();
+//    	new Thread(new Runnable(){
+//    		private final static String TAG = "threadSaveButtonClick()";
+//    		@Override
+//    		public void run(){
+//    			Log.i(TAG,"run()");
+//    			try{
+//    				Log.i(TAG,"try");
+//    				SetData.this.fc.saveData(new Data(username.getText().toString(), password.getText().toString()));
+//    				saveDataHandler.sendEmptyMessage(1);
+//    			}catch(SaveDataException e){
+//    				e.getMessage();
+//					saveDataHandler.sendEmptyMessage(0);
+//					Log.e(TAG,"SaveDataException: ");
+//    			}finally{
+//    				Log.i(TAG,"finally");
+//    				SetData.this.finish();
+//    			}
+//    		}
+//    	}).start();	
+//	}
+
 	public void saveButtonClick() {
 		Log.d(TAG, "saveButtonClick() " + username.getText() + " " + password.getText()  );
 		myPd.setMessage(getResources().getString(R.string.saving_data));
@@ -61,12 +91,11 @@ public class SetData extends Activity{
     			Log.i(TAG,"run()");
     			try{
     				Log.i(TAG,"try");
-    				SetData.this.fc.saveData(new Data(username.getText().toString(), password.getText().toString()));
+    				SetData.this.saveData(new Data(username.getText().toString(), password.getText().toString()));
     				saveDataHandler.sendEmptyMessage(1);
     			}catch(SaveDataException e){
-    				e.getMessage();
 					saveDataHandler.sendEmptyMessage(0);
-					Log.e(TAG,"SaveDataException: ");
+					Log.e(TAG,"SaveDataException: " + e.getMessage());
     			}finally{
     				Log.i(TAG,"finally");
     				SetData.this.finish();
@@ -102,7 +131,18 @@ public class SetData extends Activity{
 			}
 		}
 	};
-
+	
+	private void saveData(Data data) throws SaveDataException{
+		Log.i(TAG,"saveData()");
+		sharedPref = this.getSharedPreferences(SetData.savePath, Activity.MODE_WORLD_WRITEABLE);
+		editor=sharedPref.edit();
+		editor.putString("username", data.getUsername());
+		editor.putString("password", data.getPassword());
+		if (!editor.commit()){
+			throw new SaveDataException("Data not saved");
+		}
+	}
+	
 	private void vibra(){
 		Log.i(TAG,"vibra()");
     	vibrator.vibrate(SetData.MILLISECONDS);
