@@ -1,13 +1,16 @@
 package org.bobarctor.Rm3Wifi;
 
+import org.bobarctor.Rm3Wifi.Exceptions.LoadDataException;
 import org.bobarctor.Rm3Wifi.Exceptions.LoginException;
 import org.bobarctor.Rm3Wifi.Exceptions.LogoutException;
 import org.bobarctor.Rm3Wifi.Facade.FacadeController;
+import org.bobarctor.Rm3Wifi.Model.Data;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,9 +29,12 @@ public class Main extends Activity{
 	 */
 	private static final String TAG = "Rm3WiFi:Main";
 	private static final int MILLISECONDS = 100;
+	private static final String savePath="data";
 	private FacadeController fc;
 	private Vibrator vibrator;
 	private ProgressDialog myPd;
+	private SharedPreferences sharedPref;
+
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,10 +42,9 @@ public class Main extends Activity{
         Log.i(TAG, "onCreate()");
         setContentView(R.layout.main);
         fc = FacadeController.getInstance();
-        fc.init();
         vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE); 
         myPd = new ProgressDialog(Main.this);
-        
+
         // Dichiarazione ed assegnazione dei listener dei pulsanti
         View loginButton = findViewById(R.id.login_button);
 //        View setDataButton = findViewById(R.id.set_data_button);
@@ -107,10 +112,13 @@ public class Main extends Activity{
     			Log.i(TAG, "run()");
     			try{
     				Log.i(TAG, "try");
-    				fc.login(getWifiIp());
+    				fc.login(loadData(),getWifiIp());
     				loginHandler.sendEmptyMessage(1);
     			} catch(LoginException e){
     				Log.e(TAG,"LoginException: " + e.getMessage());
+    				loginHandler.sendEmptyMessage(0);
+    			} catch(LoadDataException e){
+    				Log.e(TAG,"LoadDataException: " + e.getMessage());
     				loginHandler.sendEmptyMessage(0);
     			}
     		}
@@ -214,6 +222,20 @@ public class Main extends Activity{
         Log.d(TAG, "ip ottenuto: "+ip);
        return (ip & 0xFF) + "." + ((ip >> 8) & 0xFF) + "." + ((ip >> 16) & 0xFF) + "." + ((ip >> 24) & 0xFF); 
     }
+    
+    private Data loadData() throws LoadDataException{
+		Log.i(TAG,"loadData()");
+		Data data = new Data();
+		try{
+			sharedPref = this.getSharedPreferences(Main.savePath, Activity.MODE_WORLD_WRITEABLE);
+			data = new Data(sharedPref.getString("username", "username"),sharedPref.getString("password", "password"));
+			Log.d(TAG,"DATA: " + data.toString());
+		}catch(ClassCastException e){
+			Log.e(TAG,"ClassCastException: "+e.getMessage());
+			throw new LoadDataException(e.getMessage());
+		}
+		return data;
+	}
     
     private void vibra(){
     	Log.i(TAG, "vibra()");
