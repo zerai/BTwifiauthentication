@@ -210,8 +210,8 @@ public class Main extends Activity{
     	int order = Menu.FIRST;
     	int GROUPA = 0;
     	int GROUPB = 1;
-    	menu.add(GROUPA,order,order++,getResources().getString(R.string.set_data_label)).setIntent(new Intent(Main.this,SetData.class));
-    	menu.add(GROUPB,order,order++,getResources().getString(R.string.about_label)).setIntent(new Intent(Main.this,About.class));
+    	menu.add(GROUPA,order,order++,getResources().getString(R.string.set_data_label)).setIntent(new Intent(Main.this,SetData.class)).setIcon(android.R.drawable.ic_menu_preferences);
+    	menu.add(GROUPB,order,order++,getResources().getString(R.string.about_label)).setIntent(new Intent(Main.this,About.class)).setIcon(android.R.drawable.ic_menu_info_details);
     	return true;
     }
     
