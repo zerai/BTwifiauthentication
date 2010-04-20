@@ -4,13 +4,13 @@
     <string name="main_title">Rm3WiFiAuthentication</string>
 	<string name="login_label">Login</string>
 	<string name="logout_label">Logout</string>
-	<string name="set_data_label">Impostazioni</string>
+	<string name="set_data_label">Paramètres</string>
 	<string name="about_label">Information</string>
 	<string name="about_title">Infos Rm3WifiAuthenticator</string>
 	<string name="about_text"><i>Créée par Michele Valentini \nvalentini.michele@gmail.com</i></string>
 	<string name="exit_label">Sortie</string>
 	<string name="set_data_title">Paramètres</string>
-	<string name="username">Nom D'Utilisateur</string>
+	<string name="username">Nom D\'Utilisateur</string>
 	<string name="password">Mot De Passe</string>
 	<string name="save">Sauver</string>
 	<string name="init_title">Initialisation</string>
