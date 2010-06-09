@@ -3,22 +3,24 @@ package org.bobarctor.Rm3Wifi;
 
 
 import org.bobarctor.Rm3Wifi.Exceptions.SaveDataException;
-//import org.bobarctor.Rm3Wifi.Facade.FacadeController;
 import org.bobarctor.Rm3Wifi.Model.Data;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Log;
 
 public class SetData extends Activity{
 	/**
@@ -41,12 +43,22 @@ public class SetData extends Activity{
 		super.onCreate(savedInstanceState);
 		Log.i(TAG,"onCreate()");
 		setContentView(R.layout.set_data);
+		 Typeface face=Typeface.createFromAsset(getAssets(), "fonts/Purisa.ttf"); 
         vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE); 
 		username = (EditText) findViewById(R.id.username);
 		password = (EditText) findViewById(R.id.password);
 		myPd = new ProgressDialog(SetData.this);
 		// Dichiarazione ed assegnazione dei listener del pulsante
-		View save = findViewById(R.id.save);
+		Button save = (Button)findViewById(R.id.save);
+		save.setTypeface(face);
+		TextView setDataTitle = (TextView)findViewById(R.id.set_data_title);
+		setDataTitle.setTypeface(face);
+		TextView usernameText =  (TextView)findViewById(R.id.username_text);
+		usernameText.setTypeface(face);
+		TextView passwordText =  (TextView)findViewById(R.id.password_text);
+		passwordText.setTypeface(face);
+		password.setTypeface(face);
+		username.setTypeface(face);
 		save.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

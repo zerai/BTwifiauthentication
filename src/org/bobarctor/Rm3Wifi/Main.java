@@ -11,16 +11,19 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Log;
 
 public class Main extends Activity{
 	/**
@@ -41,17 +44,21 @@ public class Main extends Activity{
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate()");
         setContentView(R.layout.main);
+        Typeface face=Typeface.createFromAsset(getAssets(), "fonts/Purisa.ttf"); 
         fc = FacadeController.getInstance();
         vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE); 
         myPd = new ProgressDialog(Main.this);
-
+        TextView title = (TextView)findViewById(R.id.title);
+        title.setTypeface(face);
         // Dichiarazione ed assegnazione dei listener dei pulsanti
-        View loginButton = findViewById(R.id.login_button);
+        Button loginButton = (Button)findViewById(R.id.login_button);
 //        View setDataButton = findViewById(R.id.set_data_button);
 //        View aboutButton = findViewById(R.id.about_button);
-        View exitButton = findViewById(R.id.exit_button);
-        View logoutButton = findViewById(R.id.logout_button);
-        
+        Button exitButton = (Button)findViewById(R.id.exit_button);
+        Button logoutButton = (Button)findViewById(R.id.logout_button);
+        loginButton.setTypeface(face);
+        exitButton.setTypeface(face);
+        logoutButton.setTypeface(face);
         exitButton.setOnClickListener(new OnClickListener() {
         	@Override
         	public void onClick(View v) {
